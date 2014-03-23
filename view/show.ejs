@@ -1,0 +1,31 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta charset="utf-8"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="jquery.masonry.js"></script>
+<script type="text/javascript" src="jquery.infinitescroll.js"></script>
+<link rel="stylesheet" type="text/css" href="fall_1.css">
+<script type="text/javascript">
+  $(function(){
+    var $container = $('#masonry');
+    $container.imagesLoaded(function(){
+      $container.masonry({
+        itemSelector:'.box',
+        gutterWidth:20,
+        isAnimated:true,
+      });
+    });
+  });
+</script>
+</head>
+<body>
+<h1>ejs加载</h1>
+  <div id="masonry" class="container-fluid">
+  <% if (names.length) {%>
+  <% names.forEach(function(name){%>
+    <div class="box"><img src="<%=name%>"></div><%})}%>
+
+  </div>
+</body>
+</html>

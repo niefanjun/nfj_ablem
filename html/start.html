@@ -1,0 +1,62 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>相册</title>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="jquery.masonry.js"></script>
+<script type="text/javascript" src="jquery.infinitescroll.js"></script>
+
+<link rel="stylesheet" type="text/css" href="start.css">
+<script type="text/javascript">
+
+    $(document).ready(function() {
+      $(window).resize(function() {
+        $(".file_form").css("padding-top","50px");
+      });
+      $(".file").change(function(){
+        $("form").submit();
+        window.location.href="start.html";
+      });
+    });
+
+    $(function(){
+    var $container = $('#masonry');
+    $container.imagesLoaded(function(){
+      $container.masonry({
+        itemSelector:'.box',
+        gutterWidth:20,
+        isAnimated:true,
+       });
+     });
+    });
+</script>
+</head>
+<body>
+
+  <div class="header">
+  <div class="logo"><img src="logo.png" width="74" height="23"></div>
+  <div class="right_btn"><img class="rf_btn" src="refresh.png" width="30" height="30"></div>
+  <div class="upload">
+    <form id="uploadform" action="#/upload" method="post" enctype="multipart/form-data">
+    <input class="file" type="file" name="upload">
+    <span class="fakefile">上传</span>
+    </form>
+  </div>
+  </div>
+  <div class="page">
+    <ul>
+      <li class="current">
+          <a href="show">我的相册</a>
+      </li>
+    </ul>
+  </div>
+
+  <div id="masonry" class="content container-fluid">
+    <div class="box"><img src="1.jpg"></div>
+    <div class="box"><img src="2.jpg"></div>
+    <div class="box"><img src="3.jpg"></div>
+  </div>
+  
+</body>
+</html>
