@@ -3,6 +3,9 @@
     border-top: 1px solid #29bce5;
     border-bottom: 1px solid #b3b2b2;
     background:-webkit-linear-gradient(top,rgba(29,144,212,1) ,rgba(31,115,185,1) );
+    background: -moz-linera-gradient(top,rgba(29,144,212,1) ,rgba(31,115,185,1) );
+    background: -o-linear-gradient(top,rgba(29,144,212,1) ,rgba(31,115,185,1)); 
+    background: linear-gradient(to bottom, rgba(29,144,212,1) , rgba(29,144,212,1) );
 }
 body{
     margin: 0px;
