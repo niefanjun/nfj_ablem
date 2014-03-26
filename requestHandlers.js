@@ -21,9 +21,18 @@ function start(response){
 function upload(response,request){
     console.log("upload was called");
     var form = new formidable.IncomingForm();
-    console.log("about to parse");
+    console.log("for headers");
+    console.log(request.headers);
     form.parse(request, function(error, fields, files) {
-        console.log("parsing done");
+        console.log("for files");
+        console.log(files);
+        console.log("for fields");
+        //files.upload.name = "1.png";
+        //files.upload.type = "image/png";
+        console.log(fields);
+        console.log("form");
+        console.log(form);
+
         var readStream = fs.createReadStream(files.upload.path);
         console.log(files.upload.name);
         var writeStream = fs.createWriteStream("./pic/"+files.upload.name);
@@ -32,7 +41,7 @@ function upload(response,request){
             fs.unlinkSync(files.upload.path);
         });
         response.writeHead(200, {"Content-Type": "text/html"});
-        response.write('<meta http-equiv="refresh" content="0.1;url=/">');
+        response.write('OK');
         response.end();
     });
 }
