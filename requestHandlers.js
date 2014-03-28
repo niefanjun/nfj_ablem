@@ -48,19 +48,26 @@ function upload(response,request){
 function show(response){
     console.log("show was called");
     //conbine(response,"show");
-    response.writeHead(200, {"Content-Type": "text/html"});
+    
+    var student = new Object();
+    student.name = "Lanny";
+    student.age = "25";
+    student.location = "China";
+    response.writeHead(200, {"Content-Type": "text/json"});
     var names = fs.readdirSync('./pic');
-    ejs.renderFile(__dirname+'/view/show.ejs',
-    {names: names},
-    function(error,result){
-        if(!error){
-            response.end(result);
-        }
-        else{
-            response.end("error");
-            console.log("show error");
-        }
-    });
+    /*
+    for(var i = 0; i < names.length; i++){
+        pic_arr[i] = names
+    };
+    */
+    var json = {
+        "name" : "test",
+        "var" : names
+    };
+    console.log(json);
+    var pic_json = JSON.stringify(names);
+    console.log(pic_json);
+    response.end(JSON.stringify(json));
 }
 exports.start = start;
 exports.upload = upload;

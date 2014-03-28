@@ -1,25 +1,9 @@
-function arrayBufferToBlob(buffer, opt_contentType) {
-    var uInt8Array;
-    uInt8Array = new Uint8Array(buffer);
-    return new Blob([uInt8Array], (opt_contentType ? {
-        type: opt_contentType
-    } : {}));
-}
-
 function nfj_hashchange(){
     var url = window.location.href;
     var page = url.substr(url.indexOf("/#") + 2)
     if(page == "upload")
     {
-        /*
-        var data = new FormData();
-        jQuery.each($('#uploadfile')[0].files, function(i, file) {
-            data.append('file-'+i, file);
-        });
-*/
-        var data = new FormData($('#uploadform')[0]);
-        //var data = new FormData();
-        
+        var data = new FormData($('#uploadform')[0]);   
         $.ajax({
         url: "upload",
         type: "POST",

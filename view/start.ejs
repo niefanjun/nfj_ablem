@@ -4,46 +4,43 @@
 <meta charset="utf-8"/>
 <title>相册</title>
 <script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="get_pic.js"></script>
 <script type="text/javascript" src="jquery.masonry.js"></script>
 <script type="text/javascript" src="jquery.infinitescroll.js"></script>
-<script type="text/javascript" src="hashchange.js"></script>
 <link rel="stylesheet" type="text/css" href="start.css">
 <script type="text/javascript">
 
     $(document).ready(function() {
-      $(window).resize(function() {
-        $(".file_form").css("padding-top", "50px");
-      });
+      nfj_get_pic();
+
+
+
       $(".file").change(function() {
+        if($(".file").val() == ""){
+          alert("请选择文件");
+        }
+        else
+        {
+          var data = new FormData($('#uploadform')[0]);
+          $.ajax({
+          url: "upload",
+          type: "POST",
+          data: data,
+          catch: false,
+          processData: false,  // 告诉jQuery不要去处理发送的数据
+          contentType: false,  // 告诉jQuery不要去设置Content-Type请求头
+          success:function(){
+            nfj_get_pic();
+            }
+          });
+        }
         
-        var data = new FormData($('#uploadform')[0]);
-        $.ajax({
-        url: "upload",
-        type: "POST",
-        data: data,
-        catch: false,
-        processData: false,  // 告诉jQuery不要去处理发送的数据
-        contentType: false   // 告诉jQuery不要去设置Content-Type请求头
-        });
       });
+
     });
   
-    $(document).ready(function() {
-      if ('onhashchange' in window)
-        var url = window.location.href;
-      window.onhashchange = nfj_hashchange();
-    });
-  
-    $(function() {
-      var $container = $('#masonry');
-      $container.imagesLoaded(function() {
-        $container.masonry({
-          itemSelector: '.box',
-          gutterWidth: 20,
-          isAnimated: true,
-        });
-      });
-    });
+
+
 </script>
 </head>
 <body>
@@ -65,12 +62,8 @@
       </li>
     </ul>
   </div>
-
   <div id="masonry" class="content container-fluid">
-    <% if (names.length) {%>
-    <% names.forEach(function(name){%>
-    <div class="box"><img src="<%="pic/"+name%>"></div>
-    <%})}%>
+    
   </div>
 </body>
 </html>
