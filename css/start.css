@@ -110,6 +110,12 @@ a{
     float: left;
     width:200px;
 }
+.boxhide{
+    margin-bottom: 20px;
+    float: left;
+    width:200px;
+    display: none;    
+}
 .box img{
     max-width: 100%;
 }

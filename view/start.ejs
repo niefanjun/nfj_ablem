@@ -11,9 +11,8 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
+
       nfj_get_pic();
-
-
 
       $(".file").change(function() {
         if($(".file").val() == ""){
@@ -35,6 +34,22 @@
           });
         }
         
+      });
+
+      $("#show").click(function() {
+        nfj_show_pic();
+        $("#masonry").trigger('resize');
+      });
+      $("#hide").click(function() {
+        nfj_hide_pic();
+        $("#masonry").trigger('resize');
+      });
+      $(window).bind("scroll",function() {  
+        // 然后判断窗口的滚动条是否接近页面底部，这里的20可以自定义  
+          if ($(document).scrollTop() + $(window).height() > $(document).height() - 20) {  
+                //我这里偷个懒，没有写ajax的调用，直接触发了链接的click事件。  
+                nfj_load_pic();  
+          }  
       });
 
     });
@@ -62,8 +77,11 @@
       </li>
     </ul>
   </div>
+  <button id="show" type="button">show</button>
+  <button id="hide" type="button">hide</button>
   <div id="masonry" class="content container-fluid">
     
   </div>
+
 </body>
 </html>

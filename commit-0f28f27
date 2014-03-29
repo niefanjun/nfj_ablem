@@ -1,0 +1,242 @@
+commit 0f28f27f7e442ab5afea88fcc85be04338f9d8f8
+Author: 聂凡竣 <niefanjun@gmail.com>
+Date:   Fri Mar 28 17:07:26 2014 +0800
+
+    将pic移出来，减少大小，不过调试的时候记得移动回去
+    优化了masonry插件的几个显示错误的bug
+    
+    Signed-off-by: 聂凡竣 <niefanjun@gmail.com>
+
+diff --git a/js/get_pic.js b/js/get_pic.js
+new file mode 100644
+index 0000000..33db8ec
+--- /dev/null
++++ b/js/get_pic.js
+@@ -0,0 +1,21 @@
++function nfj_get_pic(){
++    $.ajax({
++        url:"show",
++        type:"GET",
++        success:function(data){
++            $("#masonry").empty();
++            for(var i = 0;data.var[i];i++){
++                $('#masonry').append("<div class='box'><img src='pic/"+data.var[i]+"'></div>");
++            }
++            var $container = $('#masonry');
++            $container.imagesLoaded(function() {
++              $container.masonry({
++                itemSelector: '.box',
++                gutterWidth: 20,
++                isAnimated: false,
++              });
++            });//用于对页面调用瀑布流布局
++            $container.masonry().masonry("reload");
++        }
++    });
++}
+diff --git a/js/hashchange.js b/js/hashchange.js
+index cc46f4a..ce42da5 100644
+--- a/js/hashchange.js
++++ b/js/hashchange.js
+@@ -1,25 +1,9 @@
+-function arrayBufferToBlob(buffer, opt_contentType) {
+-    var uInt8Array;
+-    uInt8Array = new Uint8Array(buffer);
+-    return new Blob([uInt8Array], (opt_contentType ? {
+-        type: opt_contentType
+-    } : {}));
+-}
+-
+ function nfj_hashchange(){
+     var url = window.location.href;
+     var page = url.substr(url.indexOf("/#") + 2)
+     if(page == "upload")
+     {
+-        /*
+-        var data = new FormData();
+-        jQuery.each($('#uploadfile')[0].files, function(i, file) {
+-            data.append('file-'+i, file);
+-        });
+-*/
+-        var data = new FormData($('#uploadform')[0]);
+-        //var data = new FormData();
+-        
++        var data = new FormData($('#uploadform')[0]);   
+         $.ajax({
+         url: "upload",
+         type: "POST",
+diff --git a/pic/1.jpg b/pic/1.jpg
+deleted file mode 100644
+index 061127c..0000000
+Binary files a/pic/1.jpg and /dev/null differ
+diff --git a/pic/1.png b/pic/1.png
+deleted file mode 100644
+index 48ad52d..0000000
+Binary files a/pic/1.png and /dev/null differ
+diff --git a/pic/2.jpg b/pic/2.jpg
+deleted file mode 100644
+index db72d86..0000000
+Binary files a/pic/2.jpg and /dev/null differ
+diff --git a/pic/3.jpg b/pic/3.jpg
+deleted file mode 100644
+index 897b804..0000000
+Binary files a/pic/3.jpg and /dev/null differ
+diff --git "a/pic/QQ\346\210\252\345\233\27620140205181630.jpg" "b/pic/QQ\346\210\252\345\233\27620140205181630.jpg"
+deleted file mode 100644
+index 114d139..0000000
+Binary files "a/pic/QQ\346\210\252\345\233\27620140205181630.jpg" and /dev/null differ
+diff --git a/pic/aae47cfd-4511-48ee-9098-191effcc3111.jpg b/pic/aae47cfd-4511-48ee-9098-191effcc3111.jpg
+deleted file mode 100644
+index 5962778..0000000
+Binary files a/pic/aae47cfd-4511-48ee-9098-191effcc3111.jpg and /dev/null differ
+diff --git a/pic/harme_no_dick_eternal_01.jpg b/pic/harme_no_dick_eternal_01.jpg
+deleted file mode 100644
+index 6522bdd..0000000
+Binary files a/pic/harme_no_dick_eternal_01.jpg and /dev/null differ
+diff --git "a/pic/\351\253\230\345\215\240\346\230\245.jpg" "b/pic/\351\253\230\345\215\240\346\230\245.jpg"
+deleted file mode 100644
+index d5a3822..0000000
+Binary files "a/pic/\351\253\230\345\215\240\346\230\245.jpg" and /dev/null differ
+diff --git a/requestHandlers.js b/requestHandlers.js
+index 391cd25..073db09 100644
+--- a/requestHandlers.js
++++ b/requestHandlers.js
+@@ -48,19 +48,26 @@ function upload(response,request){
+ function show(response){
+     console.log("show was called");
+     //conbine(response,"show");
+-    response.writeHead(200, {"Content-Type": "text/html"});
++    
++    var student = new Object();
++    student.name = "Lanny";
++    student.age = "25";
++    student.location = "China";
++    response.writeHead(200, {"Content-Type": "text/json"});
+     var names = fs.readdirSync('./pic');
+-    ejs.renderFile(__dirname+'/view/show.ejs',
+-    {names: names},
+-    function(error,result){
+-        if(!error){
+-            response.end(result);
+-        }
+-        else{
+-            response.end("error");
+-            console.log("show error");
+-        }
+-    });
++    /*
++    for(var i = 0; i < names.length; i++){
++        pic_arr[i] = names
++    };
++    */
++    var json = {
++        "name" : "test",
++        "var" : names
++    };
++    console.log(json);
++    var pic_json = JSON.stringify(names);
++    console.log(pic_json);
++    response.end(JSON.stringify(json));
+ }
+ exports.start = start;
+ exports.upload = upload;
+diff --git a/test b/test
+new file mode 100644
+index 0000000..a3da30f
+--- /dev/null
++++ b/test
+@@ -0,0 +1 @@
++elf_jsonp_1([{"com":"com_slider","data":[{"title":"\u5730\u5fc3\u5f15\u529b\u65a9\u83b77\u9879\u5927\u5956 \u5c0f\u674e\u56db\u5ea6\u51b2\u5965\u5931\u8d25","url":"http:\/\/tv.uc.cn\/86thoscar\/index.html?uc_param_str=frpfbivelabtbmntdnpvsscpli&ch=meinvoscar#!","image":"http:\/\/imgcdn.tv.uc.cn:8080\/Pics\/da\/64\/3d\/1227729735fbe5d9aa7b5ff50d.jpg"},{"title":"\u300a\u7a7f\u88d8\u76ae\u7684\u7ef4\u7eb3\u65af\u300b\u8eab\u4efd\u8c03\u6362\u7684\u8650\u604b\u60c5\u7231","url":"http:\/\/tv.uc.cn\/index.html?uc_param_str=frpfbivelabtbmntdnpvsscpli&#!\/detail\/1588035","image":"http:\/\/imgcdn.tv.uc.cn:8080\/Pics\/91\/6f\/18\/3f2e6bbcb7fe816975883640ab.jpg"},{"title":"\u300a\u8be1\u7231\u300b\u5077\u60c5\u80cc\u53db\u540e\u75af\u72c2\u590d\u4ec7","url":"http:\/\/tv.uc.cn\/index.html?uc_param_str=frpfbivelabtbmntdnpvsscpli&#!\/detail\/1285564","image":"http:\/\/imgcdn.tv.uc.cn:8080\/Pics\/0d\/c9\/c4\/47035e78b25ea1df496e6f0517.jpg"},{"title":"\u300a\u5973\u4eba\u516c\u654c\u300b\u770b\u8c8c\u7f8e\u5c0f\u4e09\u5982\u4f55\u9006\u88ad","url":"http:\/\/tv.uc.cn\/index.html?uc_param_str=frpfbivelabtbmntdnpvsscpli&#!\/detail\/1287519","image":"http:\/\/imgcdn.tv.uc.cn:8080\/Pics\/e8\/dc\/5b\/35445fe041dea58dd2561620c8.jpg"},{"title":"\u300a\u5077\u60c5\u5927\u4e08\u592b\u300b\u7537\u5973\u60c5\u6b32\u7684\u72e9\u730e\u672c\u80fd","url":"http:\/\/tv.uc.cn\/index.html?uc_param_str=frpfbivelabtbmntdnpvsscpli&#!\/detail\/1580740","image":"http:\/\/imgcdn.tv.uc.cn:8080\/Pics\/11\/ac\/6b\/e4d1361e08992c787134854f3c.jpg"},{"title":"\u300a\u79c1\u4eba\u8ba2\u505a\u300b\u7537\u5c4c\u4e1d\u548c\u5927\u80f8\u5973\u795e\u641e\u7b11\u8fc7\u62db","url":"http:\/\/tv.uc.cn\/index.html?uc_param_str=frpfbivelabtbmntdnpvsscpli&#!\/detail\/1595325","image":"http:\/\/imgcdn.tv.uc.cn:8080\/Pics\/aa\/91\/7e\/507b4f897c3c0c2de722467627.jpg"}],"cache_time":600}])
+\ No newline at end of file
+diff --git a/view/start.ejs b/view/start.ejs
+index ed184cc..1398d53 100644
+--- a/view/start.ejs
++++ b/view/start.ejs
+@@ -4,46 +4,43 @@
+ <meta charset="utf-8"/>
+ <title>相册</title>
+ <script type="text/javascript" src="jquery.js"></script>
++<script type="text/javascript" src="get_pic.js"></script>
+ <script type="text/javascript" src="jquery.masonry.js"></script>
+ <script type="text/javascript" src="jquery.infinitescroll.js"></script>
+-<script type="text/javascript" src="hashchange.js"></script>
+ <link rel="stylesheet" type="text/css" href="start.css">
+ <script type="text/javascript">
+ 
+     $(document).ready(function() {
+-      $(window).resize(function() {
+-        $(".file_form").css("padding-top", "50px");
+-      });
++      nfj_get_pic();
++
++
++
+       $(".file").change(function() {
++        if($(".file").val() == ""){
++          alert("请选择文件");
++        }
++        else
++        {
++          var data = new FormData($('#uploadform')[0]);
++          $.ajax({
++          url: "upload",
++          type: "POST",
++          data: data,
++          catch: false,
++          processData: false,  // 告诉jQuery不要去处理发送的数据
++          contentType: false,  // 告诉jQuery不要去设置Content-Type请求头
++          success:function(){
++            nfj_get_pic();
++            }
++          });
++        }
+         
+-        var data = new FormData($('#uploadform')[0]);
+-        $.ajax({
+-        url: "upload",
+-        type: "POST",
+-        data: data,
+-        catch: false,
+-        processData: false,  // 告诉jQuery不要去处理发送的数据
+-        contentType: false   // 告诉jQuery不要去设置Content-Type请求头
+-        });
+       });
++
+     });
+   
+-    $(document).ready(function() {
+-      if ('onhashchange' in window)
+-        var url = window.location.href;
+-      window.onhashchange = nfj_hashchange();
+-    });
+-  
+-    $(function() {
+-      var $container = $('#masonry');
+-      $container.imagesLoaded(function() {
+-        $container.masonry({
+-          itemSelector: '.box',
+-          gutterWidth: 20,
+-          isAnimated: true,
+-        });
+-      });
+-    });
++
++
+ </script>
+ </head>
+ <body>
+@@ -65,12 +62,8 @@
+       </li>
+     </ul>
+   </div>
+-
+   <div id="masonry" class="content container-fluid">
+-    <% if (names.length) {%>
+-    <% names.forEach(function(name){%>
+-    <div class="box"><img src="<%="pic/"+name%>"></div>
+-    <%})}%>
++    
+   </div>
+ </body>
+ </html>
+\ No newline at end of file
