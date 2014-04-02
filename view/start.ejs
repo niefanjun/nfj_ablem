@@ -46,8 +46,7 @@
       });
       $(window).bind("scroll",function() {  
         // 然后判断窗口的滚动条是否接近页面底部，这里的20可以自定义  
-          if ($(document).scrollTop() + $(window).height() > $(document).height() - 20) {  
-                //我这里偷个懒，没有写ajax的调用，直接触发了链接的click事件。  
+          if ($(document).scrollTop() + $(window).height() > $(document).height() - 20) {    
                 nfj_load_pic();  
           }  
       });
